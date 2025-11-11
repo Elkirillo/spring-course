@@ -1,5 +1,5 @@
-What is the capital of France?,Paris,Berlin,Madrid,London
-2 + 2 = ?,3,4,5,6
-Which language runs on JVM?,C++,Python,Java,Go
-Who wrote '1984'?,George Orwell,Aldous Huxley,Ernest Hemingway
-What color is the sky on a clear day?,Blue,Green,Red,Yellow
+What is the capital of France?;Paris,Lyon,Marseille,Nice;Paris
+Which language is used for Android development?;Java,Python,Kotlin,C#;Kotlin
+2 + 2 = ?;3,4,5,6;4
+Spring Framework is written in which language?;Java,C++,Python,C#;Java
+Which planet is known as the Red Planet?;Earth,Mars,Jupiter,Venus;Mars
