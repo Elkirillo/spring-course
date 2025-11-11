@@ -1,0 +1,7 @@
+spring:
+  messages:
+    basename: messages/messages  # локализованные файлы сообщений
+
+app:
+  questions-resource: questions.csv
+  passing-score: 3

@@ -1,6 +1,7 @@
 package com.firstExercise.dao;
 
 import com.firstExercise.domain.Question;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Component;
 
 import java.io.BufferedReader;
@@ -14,17 +15,24 @@ import java.util.stream.Collectors;
 @Component
 public class QuestionDaoImpl implements QuestionDao {
 
-    private static final String RESOURCE_PATH = "questions.csv";
+    private final String resourcePath;
+
+    public QuestionDaoImpl(@Value("${app.questions-resource}") String resourcePath) {
+        this.resourcePath = resourcePath;
+    }
 
     @Override
     public List<Question> findAll() {
         try (BufferedReader reader = new BufferedReader(new InputStreamReader(
-                Objects.requireNonNull(getClass().getClassLoader().getResourceAsStream(RESOURCE_PATH)),
-                StandardCharsets.UTF_8
-        ))) {
+                Objects.requireNonNull(getClass().getClassLoader().getResourceAsStream(resourcePath)),
+                StandardCharsets.UTF_8))) {
+
             return reader.lines()
                     .map(line -> {
                         String[] parts = line.split(";");
+                        if (parts.length != 3) {
+                            throw new RuntimeException("Invalid CSV line: " + line);
+                        }
                         String text = parts[0];
                         List<String> options = Arrays.asList(parts[1].split(","));
                         String answer = parts[2];

@@ -14,15 +14,7 @@ public class Question {
         this.answer = answer;
     }
 
-    public String getText() {
-        return text;
-    }
-
-    public List<String> getOptions() {
-        return options;
-    }
-
-    public String getAnswer() {
-        return answer;
-    }
+    public String getText() { return text; }
+    public List<String> getOptions() { return options; }
+    public String getAnswer() { return answer; }
 }
