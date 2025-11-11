@@ -5,7 +5,7 @@
        https://www.springframework.org/schema/beans/spring-beans.xsd">
 
     <!-- Задаем путь к CSV-файлу -->
-    <bean id="questionService" class="com.firstExercise.service.QuestionServiceImpl">
+    <!--<bean id="questionService" class="com.firstExercise.service.QuestionServiceImpl">
         <property name="resourcePath" value="questions.csv"/>
-    </bean>
+    </bean> -->
 </beans>
