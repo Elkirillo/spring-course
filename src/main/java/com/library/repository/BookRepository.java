@@ -11,10 +11,12 @@ import java.util.Optional;
 
 public interface BookRepository extends JpaRepository<Book, Long> {
 
+    // Загружаем книгу с автором и жанром сразу (чтобы не было N+1)
     @EntityGraph(attributePaths = {"author", "genre"})
     @Query("select b from Book b")
     List<Book> findAllWithAuthorAndGenre();
 
+    // Получить книгу с комментариями
     @Query("select b from Book b left join fetch b.comments where b.id = :id")
     Optional<Book> findByIdWithComments(Long id);
 }

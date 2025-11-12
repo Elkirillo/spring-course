@@ -1,109 +1,59 @@
 package com.library.shell;
 
+import com.library.entities.Author;
 import com.library.entities.Book;
 import com.library.entities.Comment;
+import com.library.entities.Genre;
 import com.library.service.BookService;
+import lombok.RequiredArgsConstructor;
 import org.springframework.shell.standard.ShellComponent;
 import org.springframework.shell.standard.ShellMethod;
 import org.springframework.shell.standard.ShellOption;
+import org.springframework.stereotype.Component;
 
 import java.util.List;
 
-@ShellComponent
+@Component
+@RequiredArgsConstructor
 public class BookCommands {
 
     private final BookService bookService;
 
-    public BookCommands(BookService bookService) {
-        this.bookService = bookService;
+    public void createBook(String title, Author author, Genre genre) {
+        Book book = new Book();
+        book.setTitle(title);
+        book.setAuthor(author);
+        book.setGenre(genre);
+        bookService.save(book);
+        System.out.println("Book created: " + book.getTitle());
     }
 
-    // ---------- BOOK COMMANDS ----------
-
-    @ShellMethod(value = "List all books", key = {"books", "list-books"})
-    public String listBooks() {
-        List<Book> books = bookService.listAll();
-        if (books.isEmpty()) {
-            return "📚 No books found.";
-        }
-
-        StringBuilder sb = new StringBuilder("Books:\n");
-        for (Book b : books) {
-            sb.append(String.format(" - #%d: \"%s\" (Author: %s, Genre: %s)\n",
-                    b.getId(),
-                    b.getTitle(),
-                    b.getAuthor() != null ? b.getAuthor().getName() : "unknown",
-                    b.getGenre() != null ? b.getGenre().getName() : "unknown"));
-        }
-        return sb.toString();
+    public void listBooks() {
+        List<Book> books = bookService.findAll();
+        books.forEach(b ->
+                System.out.println(
+                        "Book: " + b.getTitle() +
+                                ", Author: " + b.getAuthor().getName() +
+                                ", Genre: " + b.getGenre().getName()
+                )
+        );
     }
 
-    @ShellMethod(value = "Find book by id", key = {"book", "find-book"})
-    public String findBook(@ShellOption long id) {
-        return bookService.findById(id)
-                .map(b -> String.format("Book #%d: \"%s\" (Author: %s, Genre: %s)",
-                        b.getId(),
-                        b.getTitle(),
-                        b.getAuthor() != null ? b.getAuthor().getName() : "unknown",
-                        b.getGenre() != null ? b.getGenre().getName() : "unknown"))
-                .orElse("Book not found.");
-    }
-
-    @ShellMethod(value = "Create book", key = {"add-book", "create-book"})
-    public String createBook(
-            @ShellOption String title,
-            @ShellOption long authorId,
-            @ShellOption long genreId
-    ) {
-        Book created = bookService.create(title, authorId, genreId);
-        return "Created book: " + created.getId() + " — " + created.getTitle();
-    }
-
-    @ShellMethod(value = "Update existing book", key = {"update-book"})
-    public String updateBook(
-            @ShellOption long id,
-            @ShellOption(defaultValue = ShellOption.NULL) String title,
-            @ShellOption(defaultValue = "-1") long authorId,
-            @ShellOption(defaultValue = "-1") long genreId
-    ) {
-        Long aId = authorId > 0 ? authorId : null;
-        Long gId = genreId > 0 ? genreId : null;
-
-        Book updated = bookService.update(id, title, aId, gId);
-        return "Updated book: " + updated.getId() + " — " + updated.getTitle();
-    }
-
-    @ShellMethod(value = "Delete book", key = {"delete-book", "remove-book"})
-    public String deleteBook(@ShellOption long id) {
+    public void deleteBook(Long id) {
         bookService.delete(id);
-        return "Book deleted: #" + id;
+        System.out.println("Book deleted with id: " + id);
     }
 
-    // ---------- COMMENT COMMANDS ----------
-
-    @ShellMethod(value = "Add comment to book", key = {"add-comment"})
-    public String addComment(@ShellOption long bookId, @ShellOption String text) {
-        Comment comment = bookService.addComment(bookId, text);
-        return String.format("Added comment #%d to book #%d: \"%s\"",
-                comment.getId(), bookId, text);
-    }
-
-    @ShellMethod(value = "List comments for a book", key = {"comments"})
-    public String listComments(@ShellOption long bookId) {
-        List<Comment> comments = bookService.listComments(bookId);
-        if (comments.isEmpty()) {
-            return "No comments for this book.";
-        }
-        StringBuilder sb = new StringBuilder("Comments for book #" + bookId + ":\n");
-        for (Comment c : comments) {
-            sb.append(String.format(" - #%d: %s\n", c.getId(), c.getText()));
-        }
-        return sb.toString();
-    }
-
-    @ShellMethod(value = "Delete comment", key = {"delete-comment"})
-    public String deleteComment(@ShellOption long commentId) {
-        bookService.deleteComment(commentId);
-        return "Comment deleted: #" + commentId;
+    public void showBook(Long id) {
+        bookService.findById(id).ifPresentOrElse(
+                b -> {
+                    System.out.println("Book: " + b.getTitle());
+                    System.out.println("Author: " + b.getAuthor().getName());
+                    System.out.println("Genre: " + b.getGenre().getName());
+                    System.out.println("Comments:");
+                    b.getComments().forEach(c -> System.out.println(" - " + c.getText()));
+                },
+                () -> System.out.println("Book not found with id: " + id)
+        );
     }
 }
