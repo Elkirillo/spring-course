@@ -23,22 +23,22 @@ public class QuestionDaoImpl implements QuestionDao {
 
     @Override
     public List<Question> findAll() {
-        try (BufferedReader reader = new BufferedReader(new InputStreamReader(
-                Objects.requireNonNull(getClass().getClassLoader().getResourceAsStream(resourcePath)),
-                StandardCharsets.UTF_8))) {
+        try (BufferedReader reader = new BufferedReader(
+                new InputStreamReader(
+                        Objects.requireNonNull(getClass().getClassLoader().getResourceAsStream(resourcePath)),
+                        StandardCharsets.UTF_8))) {
 
             return reader.lines()
                     .map(line -> {
                         String[] parts = line.split(";");
-                        if (parts.length != 3) {
-                            throw new RuntimeException("Invalid CSV line: " + line);
-                        }
+                        if (parts.length < 3) throw new RuntimeException("Invalid CSV line: " + line);
                         String text = parts[0];
                         List<String> options = Arrays.asList(parts[1].split(","));
                         String answer = parts[2];
                         return new Question(text, options, answer);
                     })
                     .collect(Collectors.toList());
+
         } catch (Exception e) {
             throw new RuntimeException("Failed to read questions from CSV", e);
         }

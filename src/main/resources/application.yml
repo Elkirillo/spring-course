@@ -1,6 +1,11 @@
 spring:
   messages:
-    basename: messages/messages  # локализованные файлы сообщений
+    basename: messages/messages  # путь к файлам messages.properties, messages_en.properties и т.д.
+    encoding: UTF-8               # явно указать кодировку
+  main:
+    web-application-type: none
+  spring.shell:
+    interactive.enabled: true
 
 app:
   questions-resource: questions.csv

@@ -1,3 +1,5 @@
-Question text;option1,option2,option3;correctAnswer
 What is 2+2?;1,2,3,4;4
-What is the capital of France?;Paris,Lyon,Marseille;Paris
+Capital of France?;Paris,Lyon,Marseille;Paris
+Color of the sky;blue,green,red;blue
+Java is a ___ language?;compiled,interpreted,markup;compiled
+Sun rises from?;north,south,east,west;east
