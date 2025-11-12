@@ -1,31 +1,21 @@
 package com.firstExercise.domain;
 
 
+import lombok.Data;
+
+import java.util.ArrayList;
 import java.util.List;
-
+@Data
 public class Question {
-    private final String text;
-    private final List<String> options;
+    private String text;
+    private String answer;
+    private List<String> options = new ArrayList<>();
 
-    public Question(String text, List<String> options) {
+    public Question() {} // нужен для Spring / Jackson
+
+    public Question(String text, String answer, List<String> options) {
         this.text = text;
+        this.answer = answer;
         this.options = options;
-    }
-
-    public String getText() {
-        return text;
-    }
-
-    public List<String> getOptions() {
-        return options;
-    }
-
-    @Override
-    public String toString() {
-        StringBuilder sb = new StringBuilder(text + "\n");
-        for (int i = 0; i < options.size(); i++) {
-            sb.append((i + 1)).append(") ").append(options.get(i)).append("\n");
-        }
-        return sb.toString();
     }
 }

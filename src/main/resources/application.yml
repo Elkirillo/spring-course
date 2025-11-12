@@ -1,0 +1,9 @@
+spring:
+  main:
+    banner-mode: console
+  messages:
+    basename: messages
+    encoding: UTF-8
+
+app:
+  questions-resource: /data/
