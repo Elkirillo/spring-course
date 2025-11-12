@@ -4,6 +4,7 @@ import com.firstExercise.domain.Question;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
+import java.util.Locale;
 import java.util.Scanner;
 
 @Service
@@ -24,7 +25,8 @@ public class TestServiceImpl implements TestService {
         String lastName = scanner.nextLine();
         System.out.println("\nHello " + firstName + " " + lastName + "! Let's start the test.\n");
 
-        List<Question> questions = questionService.getAllQuestions();
+        Locale locale = Locale.forLanguageTag("ru");
+        List<Question> questions = questionService.getAllQuestions(locale);
         int score = 0;
 
         for (Question q : questions) {

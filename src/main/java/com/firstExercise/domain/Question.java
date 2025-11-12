@@ -1,20 +1,21 @@
 package com.firstExercise.domain;
 
 
+import lombok.Data;
+
+import java.util.ArrayList;
 import java.util.List;
-
+@Data
 public class Question {
-    private final String text;
-    private final List<String> options;
-    private final String answer;
+    private String text;
+    private String answer;
+    private List<String> options = new ArrayList<>();
 
-    public Question(String text, List<String> options, String answer) {
+    public Question() {} // нужен для Spring / Jackson
+
+    public Question(String text, String answer, List<String> options) {
         this.text = text;
-        this.options = options;
         this.answer = answer;
+        this.options = options;
     }
-
-    public String getText() { return text; }
-    public List<String> getOptions() { return options; }
-    public String getAnswer() { return answer; }
 }

@@ -7,10 +7,9 @@ import org.springframework.stereotype.Component;
 import java.io.BufferedReader;
 import java.io.InputStreamReader;
 import java.nio.charset.StandardCharsets;
-import java.util.Arrays;
+import java.util.ArrayList;
 import java.util.List;
-import java.util.Objects;
-import java.util.stream.Collectors;
+import java.util.Locale;
 
 @Component
 public class QuestionDaoImpl implements QuestionDao {
@@ -22,25 +21,39 @@ public class QuestionDaoImpl implements QuestionDao {
     }
 
     @Override
-    public List<Question> findAll() {
-        try (BufferedReader reader = new BufferedReader(new InputStreamReader(
-                Objects.requireNonNull(getClass().getClassLoader().getResourceAsStream(resourcePath)),
-                StandardCharsets.UTF_8))) {
+    public List<Question> getQuestions(Locale locale) {
+        String fileName = locale.getLanguage().equals("ru") ? resourcePath + "questions_ru.csv"
+                : resourcePath + "questions.csv";
 
-            return reader.lines()
-                    .map(line -> {
-                        String[] parts = line.split(";");
-                        if (parts.length != 3) {
-                            throw new RuntimeException("Invalid CSV line: " + line);
+        List<Question> questions = new ArrayList<>();
+
+        try (BufferedReader reader = new BufferedReader(new InputStreamReader(
+                this.getClass().getResourceAsStream(fileName), StandardCharsets.UTF_8))) {
+
+            String line;
+            while ((line = reader.readLine()) != null) {
+                String[] parts = line.split(";");
+
+                if (parts.length >= 2) {
+                    String text = parts[0];
+                    String answer = parts[1];
+                    List<String> options = new ArrayList<>();
+
+                    // добавляем варианты, если они есть
+                    if (parts.length > 2) {
+                        for (int i = 2; i < parts.length; i++) {
+                            options.add(parts[i]);
                         }
-                        String text = parts[0];
-                        List<String> options = Arrays.asList(parts[1].split(","));
-                        String answer = parts[2];
-                        return new Question(text, options, answer);
-                    })
-                    .collect(Collectors.toList());
+                    }
+
+                    questions.add(new Question(text, answer, options));
+                }
+            }
+
         } catch (Exception e) {
-            throw new RuntimeException("Failed to read questions from CSV", e);
+            throw new RuntimeException("Failed to read questions file", e);
         }
+
+        return questions;
     }
 }

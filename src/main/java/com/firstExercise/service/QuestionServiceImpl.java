@@ -2,27 +2,29 @@ package com.firstExercise.service;
 
 import com.firstExercise.dao.QuestionDao;
 import com.firstExercise.domain.Question;
-import org.springframework.core.io.ClassPathResource;
+import org.springframework.context.MessageSource;
 import org.springframework.stereotype.Service;
 
-import java.io.BufferedReader;
-import java.io.InputStreamReader;
-import java.nio.charset.StandardCharsets;
-import java.util.ArrayList;
-import java.util.Arrays;
+
 import java.util.List;
+import java.util.Locale;
 
 @Service
 public class QuestionServiceImpl implements QuestionService {
 
     private final QuestionDao questionDao;
+    private final MessageSource messageSource;
 
-    public QuestionServiceImpl(QuestionDao questionDao) {
+    public QuestionServiceImpl(QuestionDao questionDao, MessageSource messageSource) {
         this.questionDao = questionDao;
+        this.messageSource = messageSource;
     }
 
     @Override
-    public List<Question> getAllQuestions() {
-        return questionDao.findAll();
+    public List<Question> getAllQuestions(Locale locale) {
+        String welcome = messageSource.getMessage("welcome", null, locale);
+        System.out.println(welcome);
+
+        return questionDao.getQuestions(locale);
     }
 }

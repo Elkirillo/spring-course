@@ -1,7 +1,9 @@
 spring:
+  main:
+    banner-mode: console
   messages:
-    basename: messages/messages  # локализованные файлы сообщений
+    basename: messages
+    encoding: UTF-8
 
 app:
-  questions-resource: questions.csv
-  passing-score: 3
+  questions-resource: /data/
