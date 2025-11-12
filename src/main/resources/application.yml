@@ -1,11 +1,14 @@
 spring:
-  messages:
-    basename: messages/messages  # путь к файлам messages.properties, messages_en.properties и т.д.
-    encoding: UTF-8               # явно указать кодировку
-  main:
-    web-application-type: none
-  spring.shell:
-    interactive.enabled: true
+  datasource:
+    url: jdbc:h2:mem:librarydb;DB_CLOSE_DELAY=-1
+    driverClassName: org.h2.Driver
+    username: sa
+    password:
+  jdbc:
+    initialize-schema: always
+  h2:
+    console:
+      enabled: true
 
 app:
   questions-resource: questions.csv
